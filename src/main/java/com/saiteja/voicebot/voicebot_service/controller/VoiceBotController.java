@@ -38,6 +38,8 @@ public class VoiceBotController {
         try {
             String generatedReply = geminiService.generateVoiceBotResponse(request.getMessage());
             return ResponseEntity.ok(new ChatResponse(generatedReply));
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(503).body(new ChatResponse(e.getMessage()));
         } catch (Exception e) {
             e.printStackTrace(); 
             return ResponseEntity.status(500).body(new ChatResponse("Sorry, my server ran into an issue processing that. Please try again."));

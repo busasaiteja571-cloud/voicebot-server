@@ -18,7 +18,7 @@ public class GeminiService {
 	// Update the end of the URL string from gemini-1.5-flash to gemini-2.5-flash
 	private static final String GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=";
 	
-	@Value("${gemini.api.key}")
+	@Value("${gemini.api.key:}")
 	private String apiKey; 
 
     private static final String SYSTEM_PROMPT = 
@@ -34,6 +34,10 @@ public class GeminiService {
 
     @SuppressWarnings("rawtypes")
     public String generateVoiceBotResponse(String userPrompt) throws Exception {
+        if (apiKey == null || apiKey.isBlank()) {
+            throw new IllegalStateException("Gemini API key is not configured. Set GEMINI_API_KEY in your deployment environment.");
+        }
+
         RestTemplate restTemplate = new RestTemplate();
         String targetUrl = GEMINI_API_URL + apiKey;
 
